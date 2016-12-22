@@ -16,18 +16,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(ZohhakRunner.class)
 public class ConversationalClockTest {
 
+    private ConversationalClockDisplayer conversationalClockDisplayer;
+    private String conversationalTime;
+
     @TestWith({
-            "01:00, it's one o'clock",
+            "01,00, it's one o'clock",
     })
-    public void should_tell_the_time_on_the_hour(ConversationalClock clock, String expectedTime) throws Exception {
-        assertThat(clock.currentTime()).isEqualTo(expectedTime);
+    public void should_tell_the_time_on_the_hour(int hour, int minutes, String expectedTime) throws Exception {
+        conversationalTimeFromClock(hour, minutes, expectedTime);
     }
 
-    ConversationalClockDisplayer conversationalClockDisplayer;
-    String conversationalTime;
 
     //  the Clock tell the time on an hour ("it's one o'clock", "it's two o'clock")
-    @TestWith({
+    @TestWith(value = {
             "01,00, it's one o'clock",
             "02,00, it's two o'clock",
             "11,00, it's eleven o'clock"
@@ -100,7 +101,6 @@ public class ConversationalClockTest {
     private void conversationalTimeFromClock(int hour, int minutes, String expectedTime) {
         conversationalClockDisplayer = new ConversationalClockDisplayer(() -> LocalTime.of(hour, minutes));
         conversationalTime = conversationalClockDisplayer.showTime();
-
         MatcherAssert.assertThat(conversationalTime, Matchers.is(expectedTime));
     }
 }
